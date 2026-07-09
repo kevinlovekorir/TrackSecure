@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrackSecure Kenya — Protect. Track. Recover.</title>
+<meta name="description" content="Locate, secure, and recover your Android phone if it's lost or stolen. GPS tracking, remote lock, SIM-change alerts, built for Kenya.">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#080C10">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <div class="brand">
+      <img src="icons/icon-192.png" alt="" class="brand-mark">
+      TrackSecure <span class="mono" style="color:var(--signal)">KE</span>
+    </div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#users">Who it's for</a>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark or light mode">◐</button>
+      <a href="dashboard.html" class="btn btn-ghost">Log in</a>
+      <a href="dashboard.html" class="btn btn-primary">Get started</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container hero-grid">
+    <div>
+      <div class="eyebrow"><span class="eyebrow-dot"></span> Built for the Kenyan market</div>
+      <h1>Lost your phone?<br>Find it, lock it, <span>get it back.</span></h1>
+      <p class="lead">TrackSecure Kenya pairs live GPS tracking with remote lock, SIM-change alerts, and recovery tools — so a stolen phone doesn't mean stolen data.</p>
+      <div class="hero-ctas">
+        <a href="dashboard.html" class="btn btn-primary">Protect my phone — it's free</a>
+        <a href="#how" class="btn btn-ghost">See how it works</a>
+      </div>
+      <p class="hero-note">// no phone can be tracked without the owner installing and permitting it</p>
+    </div>
+
+    <div class="radar-card">
+      <div class="radar-head">
+        <span>DEVICE · Samsung A14 · +254 7•• ••• 213</span>
+        <span class="radar-status"><span class="dot"></span> ONLINE</span>
+      </div>
+      <div class="radar-scope">
+        <div class="radar-ring r1"></div>
+        <div class="radar-ring r2"></div>
+        <div class="radar-ring r3"></div>
+        <div class="radar-pin"></div>
+      </div>
+      <div class="radar-readout">
+        <div class="readout-item">
+          <div class="readout-label">Location</div>
+          <div class="readout-value accent" id="lat">-0.6817° , 35.2891°</div>
+        </div>
+        <div class="readout-item">
+          <div class="readout-label">Battery</div>
+          <div class="readout-value" id="batt">74%</div>
+        </div>
+        <div class="readout-item">
+          <div class="readout-label">Network</div>
+          <div class="readout-value">Wi-Fi · Safaricom</div>
+        </div>
+        <div class="readout-item">
+          <div class="readout-label">SIM status</div>
+          <div class="readout-value accent">Unchanged</div>
+        </div>
+        <div class="readout-item">
+          <div class="readout-label">Last sync</div>
+          <div class="readout-value" id="sync">2s ago</div>
+        </div>
+        <div class="readout-item">
+          <div class="readout-label">Signal</div>
+          <div class="readout-value">▂▄▆█</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="features">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">Key features</div>
+      <h2>Everything you need to recover a device</h2>
+      <p>One dashboard, every registered phone — from live location to a remote wipe, if it comes to that.</p>
+    </div>
+    <div class="feature-grid">
+
+      <div class="feature">
+        <div class="feature-icon">◎</div>
+        <h3>Live GPS tracking</h3>
+        <p>Real-time location, movement history, and last-known position on an interactive map.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⛁</div>
+        <h3>Battery & connection status</h3>
+        <p>See battery percentage, charging state, and whether the device is on Wi-Fi or mobile data.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">◈</div>
+        <h3>SIM-change alerts</h3>
+        <p>Get notified the moment a SIM card is swapped — a key early signal of theft in Kenya.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">♫</div>
+        <h3>Ring on silent</h3>
+        <p>Trigger a loud ring remotely, even if the phone is set to silent or vibrate.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">▣</div>
+        <h3>Lock screen message</h3>
+        <p>Display a custom message and callback number directly on the lock screen.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⌗</div>
+        <h3>Remote lock & wipe</h3>
+        <p>Lock the device instantly, or erase data as a last resort to protect your information.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">✎</div>
+        <h3>Lost device reports</h3>
+        <p>File a report, notify emergency contacts, and get email or SMS alerts on activity.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">▤</div>
+        <h3>Multi-device support</h3>
+        <p>Register and monitor several Android devices — for family or company fleets.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⚿</div>
+        <h3>End-to-end encryption</h3>
+        <p>Every device report and command travels encrypted; only the verified owner can see it.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">Setup</div>
+      <h2>From registration to recovery</h2>
+      <p>Six steps between you and peace of mind.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div><h4>Create your account</h4><p>Sign up with encrypted authentication — your credentials are never shared.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div><h4>Register your smartphone</h4><p>Add the device's model, IMEI, and phone number to your private dashboard.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div><h4>Install the TrackSecure app</h4><p>Available to add to your home screen straight from this site — no app store required.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div><h4>Grant permissions</h4><p>Location and security permissions let the app report status securely to your account only.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">05</div>
+        <div><h4>Stay synced automatically</h4><p>The app quietly reports location, battery, and SIM status in the background.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">06</div>
+        <div><h4>Recover it if it's lost</h4><p>Log in from any browser to locate, lock, ring, or wipe the device.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="dashboard">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">Dashboard preview</div>
+      <h2>Every registered device, at a glance</h2>
+      <p>Status, location, and recovery tools for your whole fleet.</p>
+    </div>
+    <div class="radar-card" style="padding:0;">
+      <table class="device-table">
+        <thead>
+          <tr><th>Device</th><th>Battery</th><th>Network</th><th>SIM</th><th>Status</th><th></th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Kevin's Pixel 8</td><td class="mono">82%</td><td class="mono">Wi-Fi</td><td>Unchanged</td>
+            <td><span class="pill pill-online"><span class="pill-dot"></span>Online</span></td>
+            <td><a href="dashboard.html" class="btn btn-ghost btn-sm">View</a></td>
+          </tr>
+          <tr>
+            <td>Sharon's Galaxy A14</td><td class="mono">54%</td><td class="mono">Mobile data</td><td>Unchanged</td>
+            <td><span class="pill pill-online"><span class="pill-dot"></span>Online</span></td>
+            <td><a href="dashboard.html" class="btn btn-ghost btn-sm">View</a></td>
+          </tr>
+          <tr>
+            <td>Office Redmi Note 12</td><td class="mono">—</td><td class="mono">—</td><td>—</td>
+            <td><span class="pill pill-offline"><span class="pill-dot"></span>Offline</span></td>
+            <td><a href="dashboard.html" class="btn btn-ghost btn-sm">View</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="install">
+  <div class="container">
+    <div class="install-banner">
+      <div class="install-copy">
+        <h3>Add TrackSecure to your phone</h3>
+        <p>Install it straight from Chrome — it opens like an app, works from your home screen, and keeps monitoring in the background.</p>
+        <p class="install-hint" id="installHint">// tap install — no Play Store step required</p>
+      </div>
+      <div class="install-actions">
+        <button class="btn btn-primary" id="installBtn">⬇ Install app</button>
+        <a href="dashboard.html" class="btn btn-ghost">Continue in browser</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="users">
+  <div class="container two-col">
+    <div>
+      <div class="section-eyebrow">Who it's for</div>
+      <h2 style="font-family:var(--display); font-size:1.8rem; margin-bottom:14px;">Built for anyone with something to protect</h2>
+      <p style="color:var(--text-muted)">Individuals, families, and organisations across Kenya use TrackSecure to keep devices — and the data on them — recoverable.</p>
+      <div class="tag-list">
+        <span class="tag">Individual owners</span>
+        <span class="tag">Families</span>
+        <span class="tag">Businesses</span>
+        <span class="tag">Schools & universities</span>
+        <span class="tag">Delivery companies</span>
+        <span class="tag">Security organisations</span>
+        <span class="tag">SMEs</span>
+      </div>
+    </div>
+    <div>
+      <div class="mission-card">
+        <h4>Mission</h4>
+        <p>Reduce smartphone theft in Kenya with a secure, reliable, privacy-respecting platform that helps people protect and recover their own devices.</p>
+      </div>
+      <div class="mission-card">
+        <h4>Vision</h4>
+        <p>To become Kenya's leading phone protection and recovery platform — empowering millions of users while respecting privacy and the law.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container footer-inner">
+    <div class="brand"><img src="icons/icon-192.png" alt="" class="brand-mark">TrackSecure Kenya</div>
+    <p>// a phone can only ever be tracked by its verified owner</p>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

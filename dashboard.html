@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — TrackSecure Kenya</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#080C10">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  body{ min-height:100vh; }
+  .app-shell{ display:grid; grid-template-columns: 260px 1fr; min-height:100vh; }
+  .sidebar{ background:var(--panel); border-right:1px solid var(--hairline); padding:22px 16px; display:flex; flex-direction:column; gap:6px; }
+  .sidebar .brand{ padding: 6px 10px 22px; }
+  .device-item{ display:flex; align-items:center; gap:10px; padding:11px 12px; border-radius:10px; color:var(--text-muted); font-size:.88rem; }
+  .device-item.active{ background:var(--signal-dim); color:var(--signal); }
+  .device-item:hover{ background:var(--panel-raised); color:var(--text); cursor:pointer; }
+  .device-item .dot{ width:7px; height:7px; border-radius:50%; background:currentColor; flex-shrink:0; }
+  .sidebar-foot{ margin-top:auto; padding-top:16px; border-top:1px solid var(--hairline); }
+
+  .main{ padding: 24px 28px 60px; }
+  .topbar{ display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; gap:12px; flex-wrap:wrap; }
+  .topbar h1{ font-family:var(--display); font-size:1.4rem; letter-spacing:-.01em; }
+  .topbar-sub{ font-family:var(--mono); font-size:.78rem; color:var(--text-dim); }
+
+  .grid{ display:grid; grid-template-columns: 1.5fr 1fr; gap:20px; }
+  .card{ background:var(--panel); border:1px solid var(--hairline); border-radius:16px; padding:20px; }
+  .card h3{ font-family:var(--display); font-size:.98rem; margin-bottom:14px; }
+  #map{ height:360px; border-radius:12px; overflow:hidden; border:1px solid var(--hairline); }
+
+  .stat-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .stat{ background:var(--panel-raised); border:1px solid var(--hairline); border-radius:10px; padding:12px 14px; }
+  .stat-label{ font-family:var(--mono); font-size:.66rem; text-transform:uppercase; letter-spacing:.06em; color:var(--text-dim); margin-bottom:5px;}
+  .stat-value{ font-family:var(--mono); font-weight:600; font-size:1rem; }
+  .stat-value.accent{ color:var(--signal); }
+
+  .tools{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
+  .tool-btn{ display:flex; flex-direction:column; align-items:flex-start; gap:6px; padding:14px; border-radius:12px; border:1px solid var(--hairline); background:var(--panel-raised); color:var(--text); text-align:left; }
+  .tool-btn:hover{ border-color:var(--signal); }
+  .tool-btn.danger:hover{ border-color:var(--danger); }
+  .tool-btn .t-icon{ font-size:1.1rem; }
+  .tool-btn .t-label{ font-weight:600; font-size:.88rem; }
+  .tool-btn .t-desc{ font-size:.74rem; color:var(--text-muted); }
+
+  .log-item{ display:flex; justify-content:space-between; gap:12px; padding:10px 0; border-bottom:1px solid var(--hairline); font-size:.84rem; }
+  .log-item:last-child{ border-bottom:none; }
+  .log-time{ font-family:var(--mono); color:var(--text-dim); font-size:.76rem; white-space:nowrap; }
+
+  /* Auth overlay */
+  #authOverlay{ position:fixed; inset:0; height:100dvh; background:var(--void); display:flex; align-items:center; justify-content:center; z-index:9999; padding:20px; overflow-y:auto; }
+  .app-shell.hidden{ display:none !important; }
+  .auth-card{ width:100%; max-width:380px; background:var(--panel); border:1px solid var(--hairline); border-radius:18px; padding:32px; }
+  .auth-card h2{ font-family:var(--display); font-size:1.3rem; margin-bottom:6px; }
+  .auth-card p.sub{ color:var(--text-muted); font-size:.86rem; margin-bottom:22px; }
+  .field{ margin-bottom:14px; }
+  .field label{ display:block; font-size:.78rem; color:var(--text-muted); margin-bottom:6px; }
+  .field input{ width:100%; padding:11px 12px; border-radius:9px; border:1px solid var(--hairline); background:var(--void); color:var(--text); font-family:var(--body); font-size:.9rem; }
+  .field input:focus-visible{ outline:2px solid var(--signal); }
+  .auth-switch{ text-align:center; margin-top:16px; font-size:.84rem; color:var(--text-muted); }
+  .auth-switch a{ color:var(--signal); font-weight:600; }
+  .auth-error{ color:var(--danger); font-size:.8rem; margin-bottom:12px; display:none; }
+
+  @media (max-width:900px){
+    .app-shell{ grid-template-columns:1fr; }
+    .sidebar{ display:none; }
+    .grid{ grid-template-columns:1fr; }
+  }
+
+  /* Add-device modal */
+  #deviceModalOverlay{ position:fixed; inset:0; height:100dvh; background:rgba(4,7,9,.72); display:none; align-items:center; justify-content:center; z-index:500; padding:20px; overflow-y:auto; }
+  #deviceModalOverlay.open{ display:flex; }
+  .modal-card{ width:100%; max-width:420px; background:var(--panel); border:1px solid var(--hairline); border-radius:18px; padding:28px; }
+  .modal-card h2{ font-family:var(--display); font-size:1.2rem; margin-bottom:4px; }
+  .modal-card p.sub{ color:var(--text-muted); font-size:.84rem; margin-bottom:20px; }
+  .modal-actions{ display:flex; gap:10px; margin-top:8px; }
+  .modal-actions .btn{ flex:1; }
+  .modal-note{ font-family:var(--mono); font-size:.72rem; color:var(--text-dim); margin-top:14px; }
+  .toast{ position:fixed; bottom:22px; left:50%; transform:translateX(-50%); background:var(--panel-raised); border:1px solid var(--signal); color:var(--text); padding:12px 20px; border-radius:10px; font-size:.86rem; z-index:600; opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s ease; }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(-6px); }
+  .device-empty{ font-size:.82rem; color:var(--text-dim); padding:10px 12px; }
+</style>
+</head>
+<body>
+
+<!-- Auth overlay: demo-only client-side gate; real auth is handled by the backend API -->
+<div id="authOverlay">
+  <div class="auth-card">
+    <h2 id="authTitle">Log in to TrackSecure</h2>
+    <p class="sub" id="authSub">Access your private device dashboard.</p>
+    <p class="auth-error" id="authError"></p>
+    <form id="authForm">
+      <div class="field" id="nameField" style="display:none;">
+        <label for="fullName">Full name</label>
+        <input type="text" id="fullName" placeholder="Jane Wanjiru">
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="you@example.com" required>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="••••••••" required>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit" id="authSubmit">Log in</button>
+    </form>
+    <p class="auth-switch">
+      <span id="switchText">Don't have an account?</span>
+      <a href="#" id="switchLink">Create one</a>
+    </p>
+  </div>
+</div>
+
+<div class="app-shell hidden" id="appShell">
+  <aside class="sidebar">
+    <div class="brand"><img src="icons/icon-192.png" alt="" style="width:26px;height:26px;border-radius:7px;">TrackSecure</div>
+
+    <div id="deviceList"></div>
+    <button class="btn btn-ghost btn-sm" style="margin-top:10px;" id="addDeviceBtn">+ Register a device</button>
+
+    <div class="sidebar-foot">
+      <a href="index.html" class="btn btn-ghost btn-sm btn-block">← Back to site</a>
+      <button class="btn btn-ghost btn-sm btn-block" style="margin-top:8px;" id="logoutBtn">Log out</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h1 id="deviceTitle">Kevin's Pixel 8</h1>
+        <p class="topbar-sub" id="deviceSub">IMEI •• 4471 · Android 14 · last sync <span id="lastSync">just now</span></p>
+      </div>
+      <span class="pill pill-online"><span class="pill-dot"></span>Online</span>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Live location</h3>
+        <div id="map"></div>
+      </div>
+
+      <div>
+        <div class="card" style="margin-bottom:20px;">
+          <h3>Device status</h3>
+          <div class="stat-grid">
+            <div class="stat"><div class="stat-label">Battery</div><div class="stat-value accent" id="statBatt">82%</div></div>
+            <div class="stat"><div class="stat-label">Charging</div><div class="stat-value" id="statCharge">No</div></div>
+            <div class="stat"><div class="stat-label">Network</div><div class="stat-value">Wi-Fi</div></div>
+            <div class="stat"><div class="stat-label">SIM status</div><div class="stat-value accent">Unchanged</div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Recovery tools</h3>
+          <div class="tools">
+            <button class="tool-btn" data-action="ring"><span class="t-icon">♫</span><span class="t-label">Ring phone</span><span class="t-desc">Loud ring even on silent</span></button>
+            <button class="tool-btn" data-action="message"><span class="t-icon">▣</span><span class="t-label">Lock screen message</span><span class="t-desc">Show a callback note</span></button>
+            <button class="tool-btn" data-action="lock"><span class="t-icon">⚿</span><span class="t-label">Lock device</span><span class="t-desc">Remote lock instantly</span></button>
+            <button class="tool-btn danger" data-action="wipe"><span class="t-icon">⌗</span><span class="t-label">Wipe data</span><span class="t-desc">Last-resort erase</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+      <h3>Activity log</h3>
+      <div id="logList">
+        <div class="log-item"><span>Location sync completed</span><span class="log-time">2m ago</span></div>
+        <div class="log-item"><span>SIM check — no change detected</span><span class="log-time">18m ago</span></div>
+        <div class="log-item"><span>Logged in from Chrome, Nairobi</span><span class="log-time">1h ago</span></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Add-device modal -->
+<div id="deviceModalOverlay">
+  <div class="modal-card">
+    <h2>Register a device</h2>
+    <p class="sub">Add a phone to start tracking it. You can fill in what you know now and edit the rest later.</p>
+    <form id="deviceForm">
+      <div class="field">
+        <label for="devName">Device name *</label>
+        <input type="text" id="devName" placeholder="e.g. Mum's Tecno Spark" required>
+      </div>
+      <div class="field">
+        <label for="devPhone">Phone number</label>
+        <input type="tel" id="devPhone" placeholder="0712 345 678">
+      </div>
+      <div class="field">
+        <label for="devModel">Model</label>
+        <input type="text" id="devModel" placeholder="e.g. Samsung Galaxy A14">
+      </div>
+      <div class="field">
+        <label for="devImei">IMEI</label>
+        <input type="text" id="devImei" placeholder="15-digit IMEI (dial *#06# to find it)">
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="deviceModalCancel">Cancel</button>
+        <button type="submit" class="btn btn-primary">Register device</button>
+      </div>
+    </form>
+    <p class="modal-note" id="deviceModalNote">// saved to your account once the backend is connected — otherwise kept on this device/browser</p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/main.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>
